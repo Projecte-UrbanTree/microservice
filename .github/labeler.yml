@@ -1,0 +1,36 @@
+area/docker:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/.dockerignore"
+          - "compose+(.yml|.test|.prod)"
+          - "**/Dockerfile"
+
+area/tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - app/phpunit.xml.dist
+          - "**/tests/**"
+
+kind/dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/requirements**.txt"
+          - "**/composer.+(json|lock)"
+  - head-branch: '^dependabot\/'
+
+kind/design:
+  - changed-files:
+      - any-glob-to-any-file:
+          - .editorconfig
+
+kind/docs:
+  - head-branch: '^docs\/'
+
+kind/feature:
+  - head-branch: '^feat\/'
+
+kind/bug:
+  - head-branch: '^fix\/'
+
+kind/improvement:
+  - head-branch: '^refactor\/'
