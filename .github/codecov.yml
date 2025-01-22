@@ -1,0 +1,14 @@
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 5%
+    patch:
+      default:
+        informational: true
+
+comment:
+  layout: "newheader, diff, flags, components, files"
+  require_changes: true
+  hide_comment_details: true

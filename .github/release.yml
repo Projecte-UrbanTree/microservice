@@ -1,0 +1,20 @@
+changelog:
+  exclude:
+    labels:
+      - "triage/invalid"
+  categories:
+    - title: Exciting New Features 🎉
+      labels:
+        - "kind/feature"
+    - title: Fixed Bugs 🐞
+      labels:
+        - "kind/bug"
+    - title: Improvements 🌟
+      labels:
+        - "kind/improvement"
+    - title: Updated Dependencies 📦
+      labels:
+        - "kind/dependencies"
+    - title: Other Changes 📖
+      labels:
+        - "*"
