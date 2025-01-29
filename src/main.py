@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 
-from .api.v1.endpoints import sensors
 
 app = FastAPI()
 
@@ -8,7 +7,6 @@ app = FastAPI()
 def health_check():
     return {"status": "healthy", "version": "dev"}
 
-app.include_router(sensors.router)
 
 def main():
     pass
