@@ -1,6 +1,5 @@
 from fastapi import FastAPI
-
-from .api.v1.endpoints import sensors
+from src.api.v1.endpoints import sensors
 
 app = FastAPI()
 
@@ -17,6 +16,5 @@ app.include_router(sensors.router)
 
 def main():
     pass
-
 if __name__ == "__main__":
     main()
