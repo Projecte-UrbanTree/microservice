@@ -12,6 +12,8 @@ services:
     environment:
       MYSQL_DATABASE: microservice
       MYSQL_ROOT_PASSWORD: microservice
+    ports:
+      - 3306
     healthcheck:
       test:
         [
