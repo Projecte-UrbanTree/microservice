@@ -34,14 +34,9 @@ COPY . .
 # Expose the port that the application listens on.
 EXPOSE 8000
 
-FROM base AS development
-ENV APP_ENV=development
-COPY --from=dev-deps /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
-WORKDIR /app
-CMD ["python3", "-m", "uvicorn", "src.main:app", "--host=0.0.0.0", "--port=8000"]
-
-FROM development AS test
+FROM base AS test
 ENV APP_ENV=test
+COPY --from=dev-deps /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
 WORKDIR /app
 CMD ["python3", "-m", "pytest", "tests", "--junitxml=/reports/junit.xml", "--cov=src", "--cov-report=xml:/reports/coverage.xml"]
 
