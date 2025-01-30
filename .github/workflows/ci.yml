@@ -1,0 +1,30 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: 🌳 Continous Integration
+
+run-name: 🌱 Checking integrity of the app
+
+on:
+  push:
+    branches: ["**", "!main"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  build:
+    name: 🏗️ Build
+    uses: Projecte-UrbanTree/.github/.github/workflows/build.yml@main
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      id-token: write
+    with:
+      image: microservice
+    secrets: inherit
