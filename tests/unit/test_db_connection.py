@@ -1,7 +1,7 @@
 import os
 from sqlmodel import Session, SQLModel, create_engine, select
 from dotenv import load_dotenv
-from connection import engine
+from src.core.db.connection import engine
 
 # Test the database connection
 def test_database_connection():
