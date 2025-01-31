@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from api.v1.pages import pages
+from src.api.v1.pages import pages
 from src.api.v1.endpoints import sensors
 
 
