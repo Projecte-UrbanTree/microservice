@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Request
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import joinedload
 from sqlmodel import Session, select
-from src.database import get_session
+from src.core.db.connection import get_session
 from src.models.sensor_history_model import SensorHistory
 from src.models.sensor_model import Sensor
 
@@ -32,9 +32,8 @@ def get_sensor_data(*, db: Session = Depends(get_session), request: Request):
 
 @router.get("/sensor/{sensor_id}")
 async def get_sensor_history(
-    sensor_id: int, request: Request, db: Session = Depends(get_session)
+    sensor_id: int, db: Session = Depends(get_session), request: Request
 ):
-
     sensor: Sensor = db.exec(
         select(Sensor)
         .where(Sensor.id == sensor_id)
