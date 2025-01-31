@@ -1,0 +1,28 @@
+services:
+  devcontainer:
+    image: mcr.microsoft.com/devcontainers/python
+    volumes:
+      - ../..:/workspaces:cached
+    network_mode: service:database
+    command: sleep infinity
+
+  database:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: microservice
+      MYSQL_ROOT_PASSWORD: microservice
+    ports:
+      - 3306
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "/usr/local/bin/healthcheck.sh",
+          "--su-mysql",
+          "--connect",
+          "--innodb_initialized",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
