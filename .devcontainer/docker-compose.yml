@@ -3,6 +3,7 @@ services:
     image: mcr.microsoft.com/devcontainers/python
     volumes:
       - ../..:/workspaces:cached
+      - ../reports:/reports
     network_mode: service:database
     command: sleep infinity
 

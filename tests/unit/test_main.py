@@ -17,7 +17,7 @@ def test_upload_valid_file():
     files = {"uploadedFile": ("test.txt", file_content, "text/plain")}
 
     response = client.post("/uploadFile", files=files)
-    
+
     assert response.status_code == 200
     data = response.json()
 
@@ -31,7 +31,7 @@ def test_upload_large_file():
     files = {"uploadedFile": ("large.txt", large_content, "text/plain")}
 
     response = client.post("/uploadFile", files=files)
-    
+
     assert response.status_code == 403
     assert response.json()["detail"] == "File too large"
 
@@ -41,7 +41,7 @@ def test_upload_invalid_extension():
     files = {"uploadedFile": ("malware.exe", file_content, "application/octet-stream")}
 
     response = client.post("/uploadFile", files=files)
-    
+
     assert response.status_code == 403
     assert response.json()["detail"] == "Extension not allowed"
 
