@@ -1,5 +1,5 @@
 import os
-from typing import Any
+from typing import Any, Union
 
 from pydantic import MariaDBDsn, computed_field, field_validator, model_validator
 from pydantic_core import MultiHostUrl
@@ -60,9 +60,9 @@ class Settings(BaseSettings):
 
     @computed_field
     @property
-    def SQLALCHEMY_DATABASE_URI(self) -> MariaDBDsn:
+    def SQLALCHEMY_DATABASE_URI(self) -> Union[MariaDBDsn, None]:
         if (self.APP_ENV == "test"):
-            return
+            return None
         return MultiHostUrl.build(
             scheme="mysql+pymysql",
             username=self.MARIADB_USER,
