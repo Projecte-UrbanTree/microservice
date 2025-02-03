@@ -10,16 +10,13 @@ class Settings(BaseSettings):
     APP_NAME: str | None = None
     APP_PACKAGE: str = "api"
     APP_ENV: str = "development"
-
     IMAGE_VERSION: str | None = None
-
     MARIADB_SERVER: str
     MARIADB_PORT: int = 3306
     MARIADB_USER: str
     MARIADB_PASSWORD: str | None = None
     MARIADB_PASSWORD_FILE: str | None = None
     MARIADB_DB: str
-
     SENTRY_DSN: str | None = None
 
     @field_validator("IMAGE_VERSION")
@@ -33,19 +30,13 @@ class Settings(BaseSettings):
     @model_validator(mode="before")
     @classmethod
     def check_mariadb_password(cls, data: Any) -> Any:
-        
-        if isinstance(data, dict):
-            
-            if (data.get('APP_ENV') == "test"):
-                return
-            
-            if (
-                data.get("MARIADB_PASSWORD_FILE") is None
-                and data.get("MARIADB_PASSWORD") is None
-            ):
-                raise ValueError(
-                    "At least one of MARIADB_PASSWORD_FILE and MARIADB_PASSWORD must be set."
-                )
+        if data.get("APP_ENV") == "test":
+            return data
+        if (data.get("MARIADB_PASSWORD_FILE") is None
+                and data.get("MARIADB_PASSWORD") is None):
+            raise ValueError(
+                "At least one of MARIADB_PASSWORD_FILE and MARIADB_PASSWORD must be set."
+            )
         return data
 
     @field_validator("MARIADB_PASSWORD_FILE")
@@ -60,9 +51,9 @@ class Settings(BaseSettings):
 
     @computed_field
     @property
-    def SQLALCHEMY_DATABASE_URI(self) -> Union[MariaDBDsn, None]:
-        if (self.APP_ENV == "test"):
-            return None
+    def SQLALCHEMY_DATABASE_URI(self) -> Union[str, None]:
+        if self.APP_ENV == "test":
+            return "sqlite:///:memory:"
         return MultiHostUrl.build(
             scheme="mysql+pymysql",
             username=self.MARIADB_USER,
