@@ -33,7 +33,12 @@ class Settings(BaseSettings):
     @model_validator(mode="before")
     @classmethod
     def check_mariadb_password(cls, data: Any) -> Any:
+        
         if isinstance(data, dict):
+            
+            if (data.get('APP_ENV') == "test"):
+                return
+            
             if (
                 data.get("MARIADB_PASSWORD_FILE") is None
                 and data.get("MARIADB_PASSWORD") is None
@@ -56,6 +61,8 @@ class Settings(BaseSettings):
     @computed_field
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> MariaDBDsn:
+        if (self.APP_ENV == "test"):
+            return
         return MultiHostUrl.build(
             scheme="mysql+pymysql",
             username=self.MARIADB_USER,
