@@ -8,3 +8,4 @@ sentry-sdk[fastapi]==2.19.2
 sqlmodel==0.0.22
 injector==0.22.0
 python-multipart==0.0.20
+alembic==1.14.1

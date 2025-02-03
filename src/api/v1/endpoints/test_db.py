@@ -9,8 +9,10 @@ router = APIRouter()
 async def test_db_connection():
     try:
         with engine.connect() as connection:
-            # Usamos text() para convertir el string en un objeto ejecutable
             connection.execute(text("SELECT 1"))
         return {"status": "success", "message": "Conexión a la base de datos exitosa"}
     except Exception as e:
         return {"status": "error", "message": f"Error al conectar con la base de datos: {str(e)}"}
+
+
+
