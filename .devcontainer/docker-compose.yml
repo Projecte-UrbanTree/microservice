@@ -1,29 +1,45 @@
+version: "3.8"
+
 services:
   devcontainer:
-    image: mcr.microsoft.com/devcontainers/python
+    image: mcr.microsoft.com/devcontainers/python:3.10
+    container_name: urbantree_devcontainer
     volumes:
       - ../..:/workspaces:cached
-      - ../reports:/reports
     network_mode: service:database
     command: sleep infinity
 
   database:
     image: mariadb:latest
+    container_name: urbantree_database
     restart: always
     environment:
-      MYSQL_DATABASE: microservice
       MYSQL_ROOT_PASSWORD: microservice
+      MYSQL_DATABASE: microservice
     ports:
-      - 3306
+      - "3306:3306"
     healthcheck:
-      test:
-        [
-          "CMD",
-          "/usr/local/bin/healthcheck.sh",
-          "--su-mysql",
-          "--connect",
-          "--innodb_initialized",
-        ]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - urbantree_network
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: urbantree_phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: database
+      PMA_AUTH_TYPE: cookie
+    ports:
+      - "8080:80"
+    depends_on:
+      - database
+    networks:
+      - urbantree_network
+
+networks:
+  urbantree_network:
+    driver: bridge
