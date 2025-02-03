@@ -11,12 +11,14 @@ class Settings(BaseSettings):
     APP_PACKAGE: str = "api"
     APP_ENV: str = "development"
     IMAGE_VERSION: str | None = None
-    MARIADB_SERVER: str
+
+    MARIADB_SERVER: str | None = None
     MARIADB_PORT: int = 3306
-    MARIADB_USER: str
+    MARIADB_USER: str | None = None
     MARIADB_PASSWORD: str | None = None
     MARIADB_PASSWORD_FILE: str | None = None
-    MARIADB_DB: str
+    MARIADB_DB: str | None = None
+
     SENTRY_DSN: str | None = None
 
     @field_validator("IMAGE_VERSION")
@@ -32,10 +34,15 @@ class Settings(BaseSettings):
     def check_mariadb_password(cls, data: Any) -> Any:
         if data.get("APP_ENV") == "test":
             return data
+        if (data.get("MARIADB_SERVER") is None
+            or data.get("MARIADB_USER") is None
+                or data.get("MARIADB_DB") is None):
+            raise ValueError(
+                "MARIADB_SERVER, MARIADB_USER, and MARIADB_DB must be set.")
         if (data.get("MARIADB_PASSWORD_FILE") is None
                 and data.get("MARIADB_PASSWORD") is None):
             raise ValueError(
-                "At least one of MARIADB_PASSWORD_FILE and MARIADB_PASSWORD must be set."
+                "At least one of MARIADB_PASSWORD_FILE or MARIADB_PASSWORD must be set."
             )
         return data
 
