@@ -1,5 +1,6 @@
 {
     "python.analysis.extraPaths": [
-        "./src/core/db"
+        "./src/core/db",
+        "./src"
     ]
 }
