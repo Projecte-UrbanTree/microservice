@@ -5,6 +5,7 @@ from pydantic import MariaDBDsn, computed_field, field_validator, model_validato
 from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings
 
+
 class Settings(BaseSettings):
     APP_NAME: str | None = None
     APP_PACKAGE: str = "api"
@@ -23,7 +24,7 @@ class Settings(BaseSettings):
 
     @field_validator("IMAGE_VERSION")
     def check_image_version(cls, v):
-        if v == "":
+        if v is None or v == "":
             return None
         if v.startswith("v"):
             return v[1:]
