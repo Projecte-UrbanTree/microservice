@@ -55,6 +55,8 @@ RUN adduser \
     --no-create-home \
     --uid "${UID}" \
     appuser
+# Change the ownership of the application to the non-privileged user.
+RUN chown -R appuser:appuser /app
 # Switch to the non-privileged user to run the application.
 USER appuser
 # Run the application.
