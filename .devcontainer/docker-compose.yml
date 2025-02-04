@@ -14,7 +14,7 @@ services:
       MYSQL_DATABASE: microservice
       MYSQL_ROOT_PASSWORD: microservice
     ports:
-      - 3306
+      - "3306:3306"
     healthcheck:
       test:
         [
@@ -27,3 +27,22 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - urbantree_network
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    restart: always
+    environment:
+      PMA_HOST: database
+      PMA_AUTH_TYPE: cookie
+    ports:
+      - "8080:80"
+    depends_on:
+      - database
+    networks:
+      - urbantree_network
+
+networks:
+  urbantree_network:
+    driver: bridge

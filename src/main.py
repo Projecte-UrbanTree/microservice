@@ -1,8 +1,6 @@
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from src.api.v1.endpoints import sensors
-
 
 def create_app() -> FastAPI:
     app = FastAPI()
@@ -19,6 +17,7 @@ def create_app() -> FastAPI:
 
 app: FastAPI = create_app()
 
+
 @app.get("/health")
 async def health():
-    return { "status": "healthy" }
+    return {"status": "healthy"}
