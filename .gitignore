@@ -1,5 +1,6 @@
 #! Custom ↓
 /reports
+alembic.ini
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,jetbrains,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,jetbrains,visualstudiocode
