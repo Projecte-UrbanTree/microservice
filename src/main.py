@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.api.v1.endpoints import sensors, test_db
+from src.api.v1.endpoints import sensors
 
 def create_app() -> FastAPI:
     app = FastAPI()
@@ -12,7 +12,6 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
     app.include_router(sensors.router)
-    app.include_router(test_db.router)
     return app
 
 

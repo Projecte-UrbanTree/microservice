@@ -2,7 +2,6 @@ from logging.config import fileConfig
 from sqlmodel import SQLModel
 from sqlalchemy import engine_from_config, pool
 from alembic import context
-from src.domain.entities.sensor_history import SensorHistory
 import os
 from dotenv import load_dotenv  
 
