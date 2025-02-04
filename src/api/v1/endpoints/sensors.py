@@ -12,28 +12,34 @@ ALLOWED_EXTENSIONS = [".txt", ".json", ".csv"]
 
 @router.post("/uploadFile")
 async def create_upload_file(uploadedFile: UploadFile):
-    if uploadedFile.size > MAX_FILE:
+    try:
+        if uploadedFile.size > MAX_FILE:
+            raise HTTPException(
+                status_code=403,
+                detail="File too large",
+            )
+
+        timestamp = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
+        extension = os.path.splitext(uploadedFile.filename)[1]
+
+        if extension not in ALLOWED_EXTENSIONS:
+            raise HTTPException(
+                status_code=403, detail="Extension not allowed")
+
+        filename = f"{timestamp}{extension}"
+        os.makedirs(DIR, exist_ok=True)
+        file_location = os.path.join(DIR, filename)
+
+        with open(file_location, "wb+") as f:
+            shutil.copyfileobj(uploadedFile.file, f)
+
+        return {
+            "filename": uploadedFile.filename,
+            "saved_as": filename,
+            "file_location": os.path.dirname(file_location),
+        }
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
         raise HTTPException(
-            status_code=403,
-            detail="File too large",
-        )
-
-    timestamp = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
-    extension = os.path.splitext(uploadedFile.filename)[1]
-
-    if extension not in ALLOWED_EXTENSIONS:
-        raise HTTPException(status_code=403, detail="Extension not allowed")
-
-    filename = f"{timestamp}{extension}"
-    os.makedirs(DIR, exist_ok=True)
-
-    file_location = os.path.join(DIR, filename)
-
-    with open(file_location, "wb+") as f:
-        shutil.copyfileobj(uploadedFile.file, f)
-
-    return {
-        "filename": uploadedFile.filename,
-        "saved_as": filename,
-        "file_location": os.path.dirname(file_location),
-    }
+            status_code=500, detail=f"An error occurred: {str(e)}")
