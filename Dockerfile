@@ -59,6 +59,6 @@ RUN adduser \
 RUN chown -R appuser:appuser /app
 # Switch to the non-privileged user to run the application.
 USER appuser
-# Run the application
-CMD ["fastapi", "run", "src/main.py", "--port", "8000"]
+# Run the application.
+CMD ["python3", "-m", "fastapi", "run", "src/main.py", "--port", "8000"]
 # CMD ["python3", "-m", "uvicorn", "src.main:app", "--host=0.0.0.0", "--port=8000"]
