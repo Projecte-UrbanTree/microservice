@@ -5,5 +5,5 @@
 /.vscode @Projecte-UrbanTree/coordinacio @Projecte-UrbanTree/testers-de-qualitat
 
 /src @Projecte-UrbanTree/alumnat
-/tests @Projecte-UrbanTree/testers-de-qualitat
+/tests @Projecte-UrbanTree/coordinacio @Projecte-UrbanTree/testers-de-qualitat
 *.md @Projecte-UrbanTree/coordinacio @Projecte-UrbanTree/correctors-ortografics
