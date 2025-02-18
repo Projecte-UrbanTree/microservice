@@ -1,7 +1,7 @@
 # src/core/di.py
 from injector import Module, provider, singleton
 from sqlmodel import Session
-from service.file_service import FileService
+from src.service.file_service import FileService
 from src.core.db.connection import engine
 
 

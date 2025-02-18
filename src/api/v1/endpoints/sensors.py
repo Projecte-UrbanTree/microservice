@@ -1,8 +1,9 @@
 from fastapi import APIRouter, HTTPException, Query, Request, status, Depends
 from injector import Injector, inject
-from service.file_service import MAX_FILE_SIZE, FileService
+from src.service.file_service import MAX_FILE_SIZE, FileService
 
 router = APIRouter()
+
 
 def get_file_service(request: Request) -> FileService:
     injector: Injector = request.app.state.injector
