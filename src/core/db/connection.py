@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))
 
+
 def get_session():
     with Session(engine) as session:
         yield session
