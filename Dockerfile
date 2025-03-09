@@ -62,3 +62,6 @@ USER appuser
 # Run the application.
 CMD ["python3", "-m", "fastapi", "run", "src/main.py", "--port", "8000"]
 # CMD ["python3", "-m", "uvicorn", "src.main:app", "--host=0.0.0.0", "--port=8000"]
+
+# Add a healthcheck to monitor the application's status.
+HEALTHCHECK CMD python -c "import http.client; conn = http.client.HTTPConnection('localhost', 8000); conn.request('GET', '/health'); res = conn.getresponse(); exit(0 if res.status == 200 else 1)"
