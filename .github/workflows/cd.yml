@@ -64,7 +64,7 @@ jobs:
     steps:
       # https://github.com/appleboy/ssh-action/tree/7eaf76671a0d7eec5d98ee897acda4f968735a17
       - name: 🚚 SSH into production server
-        uses: appleboy/ssh-action@7eaf76671a0d7eec5d98ee897acda4f968735a17
+        uses: appleboy/ssh-action@2ead5e36573f08b82fbfce1504f1a4b05a647c6f
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
