@@ -65,3 +65,17 @@ def test_health_check():
     response = client.get("/health")
     assert response.status_code == 200
     assert response.json() == {"status": "healthy"}
+
+
+def test_get_sensors():
+    response = client.get("/sensors?skip=0&limit=10")
+    assert response.status_code == 200
+    assert isinstance(response.json(), list), "La respuesta no es una lista."
+
+
+def test_get_sensor_by_id():
+    response = client.get("/sensors/1")
+    assert response.status_code == 200
+    sensor = response.json()
+    assert "id" in sensor, "El sensor no tiene un campo 'id'."
+    assert sensor["id"] == 1, "El ID del sensor no coincide."
