@@ -4,6 +4,7 @@ from src.service.file_service import MAX_FILE_SIZE, FileService
 from sqlmodel import Session, select
 from src.domain.entities.sensor_history import SensorHistory
 from src.core.db.connection import get_session
+from src.core.security.api_key import get_api_key
 
 router = APIRouter()
 
@@ -18,7 +19,8 @@ async def create_upload_file(
     request: Request,
     event: str = Query(...,
                        description="Tipo de evento. Ejemplo: 'up' o 'join'"),
-    file_service: FileService = Depends(get_file_service)
+    file_service: FileService = Depends(get_file_service),
+    api_key: str = Depends(get_api_key)
 ):
     body = await request.body()
 
@@ -39,12 +41,21 @@ async def create_upload_file(
 
 
 @router.get("/sensors", response_model=list[SensorHistory])
-def get_sensors(skip: int = 0, limit: int = 10, session: Session = Depends(get_session)):
+def get_sensors(
+    skip: int = 0,
+    limit: int = 10,
+    session: Session = Depends(get_session),
+    api_key: str = Depends(get_api_key)
+):
     return session.exec(select(SensorHistory).offset(skip).limit(limit)).all()
 
 
 @router.get("/sensors/{sensor_id}", response_model=SensorHistory)
-def get_sensor(sensor_id: int, session: Session = Depends(get_session)):
+def get_sensor(
+    sensor_id: int,
+    session: Session = Depends(get_session),
+    api_key: str = Depends(get_api_key)
+):
     sensor = session.get(SensorHistory, sensor_id)
     if not sensor:
         raise HTTPException(status_code=404, detail="Sensor not found")
