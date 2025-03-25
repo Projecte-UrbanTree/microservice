@@ -70,6 +70,18 @@ def test_upload_file_saves_correctly():
     cleanup_saved_files()
 
 
+def test_get_sensors_with_api_key():
+    response = client.get("/sensors", headers=HEADERS)
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)
+
+
+def test_get_sensors_without_api_key():
+    response = client.get("/sensors")
+    assert response.status_code == 401
+    assert response.json()["detail"] == "X-API-Key header is required"
+
+
 def test_health_check():
     response = client.get("/health")
     assert response.status_code == 200
