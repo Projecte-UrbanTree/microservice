@@ -1,18 +1,12 @@
 from fastapi.testclient import TestClient
 import os
-from dotenv import load_dotenv
 from src.main import app
-
-load_dotenv()
 
 client = TestClient(app)
 
 MAX_FILE_SIZE = 1024 * 1024
 UPLOAD_DIR = "saved_files"
 VALID_BODY = b"Hello, this is a test file."
-
-API_KEY = os.getenv("API_KEY", "your-secret-api-key-here")
-HEADERS = {"X-API-Key": API_KEY}
 
 
 def cleanup_saved_files():
@@ -23,8 +17,7 @@ def cleanup_saved_files():
 
 def test_upload_valid_file():
     cleanup_saved_files()
-    response = client.post("/uploadFile?event=up",
-                           data=VALID_BODY, headers=HEADERS)
+    response = client.post("/uploadFile?event=up", data=VALID_BODY)
     assert response.status_code == 200
 
     assert os.path.exists(UPLOAD_DIR), "El directorio de subida no existe."
@@ -38,16 +31,14 @@ def test_upload_valid_file():
 def test_upload_large_file():
     cleanup_saved_files()
     large_content = b"A" * (MAX_FILE_SIZE + 1)
-    response = client.post("/uploadFile?event=up",
-                           data=large_content, headers=HEADERS)
+    response = client.post("/uploadFile?event=up", data=large_content)
     assert response.status_code == 403
     assert response.json()["detail"] == "File too large"
 
 
 def test_upload_invalid_event():
     cleanup_saved_files()
-    response = client.post("/uploadFile?event=invalid",
-                           data=VALID_BODY, headers=HEADERS)
+    response = client.post("/uploadFile?event=invalid", data=VALID_BODY)
     assert response.status_code == 400
     assert "no implementado" in response.json()["detail"]
 
@@ -55,8 +46,7 @@ def test_upload_invalid_event():
 def test_upload_file_saves_correctly():
     cleanup_saved_files()
     file_content = b"Test file content"
-    response = client.post("/uploadFile?event=up",
-                           data=file_content, headers=HEADERS)
+    response = client.post("/uploadFile?event=up", data=file_content)
     assert response.status_code == 200
 
     saved_files = os.listdir(UPLOAD_DIR)
@@ -69,3 +59,9 @@ def test_upload_file_saves_correctly():
     assert saved_content == file_content
 
     cleanup_saved_files()
+
+
+def test_health_check():
+    response = client.get("/health")
+    assert response.status_code == 200
+    assert response.json() == {"status": "healthy"}
