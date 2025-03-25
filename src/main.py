@@ -3,6 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.api.v1.endpoints import sensors
 from injector import Injector
 from src.core.di import AppModule
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def create_app() -> FastAPI:
