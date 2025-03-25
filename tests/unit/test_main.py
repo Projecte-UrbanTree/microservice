@@ -3,6 +3,11 @@ import os
 from dotenv import load_dotenv
 from src.main import app
 
+try:
+    load_dotenv()
+except Exception:
+    pass
+
 client = TestClient(app)
 
 MAX_FILE_SIZE = 1024 * 1024
@@ -21,8 +26,7 @@ def cleanup_saved_files():
 
 def test_upload_valid_file():
     cleanup_saved_files()
-    response = client.post("/uploadFile?event=up",
-                           data=VALID_BODY, headers=HEADERS)
+    response = client.post("/uploadFile?event=up", data=VALID_BODY)
     assert response.status_code == 200
 
     assert os.path.exists(UPLOAD_DIR), "El directorio de subida no existe."
@@ -36,16 +40,14 @@ def test_upload_valid_file():
 def test_upload_large_file():
     cleanup_saved_files()
     large_content = b"A" * (MAX_FILE_SIZE + 1)
-    response = client.post("/uploadFile?event=up",
-                           data=large_content, headers=HEADERS)
+    response = client.post("/uploadFile?event=up", data=large_content)
     assert response.status_code == 403
     assert response.json()["detail"] == "File too large"
 
 
 def test_upload_invalid_event():
     cleanup_saved_files()
-    response = client.post("/uploadFile?event=invalid",
-                           data=VALID_BODY, headers=HEADERS)
+    response = client.post("/uploadFile?event=invalid", data=VALID_BODY)
     assert response.status_code == 400
     assert "no implementado" in response.json()["detail"]
 
@@ -53,8 +55,7 @@ def test_upload_invalid_event():
 def test_upload_file_saves_correctly():
     cleanup_saved_files()
     file_content = b"Test file content"
-    response = client.post("/uploadFile?event=up",
-                           data=file_content, headers=HEADERS)
+    response = client.post("/uploadFile?event=up", data=file_content)
     assert response.status_code == 200
 
     saved_files = os.listdir(UPLOAD_DIR)
@@ -67,6 +68,37 @@ def test_upload_file_saves_correctly():
     assert saved_content == file_content
 
     cleanup_saved_files()
+
+
+def test_get_sensors_with_api_key():
+    response = client.get("/sensors", headers=HEADERS)
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)
+
+
+def test_get_sensors_without_api_key():
+    response = client.get("/sensors")
+    assert response.status_code == 401
+    assert response.json()["detail"] == "X-API-Key header is required"
+
+
+def test_get_sensor_with_api_key():
+    cleanup_saved_files()
+    client.post("/uploadFile?event=up", data=VALID_BODY)
+
+    response = client.get("/sensors/1", headers=HEADERS)
+
+    assert response.status_code in [200, 404]
+    if response.status_code == 404:
+        assert response.json()["detail"] == "Sensor not found"
+
+    cleanup_saved_files()
+
+
+def test_get_sensor_without_api_key():
+    response = client.get("/sensors/1")
+    assert response.status_code == 401
+    assert response.json()["detail"] == "X-API-Key header is required"
 
 
 def test_health_check():

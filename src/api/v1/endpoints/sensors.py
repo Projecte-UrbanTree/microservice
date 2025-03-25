@@ -20,7 +20,6 @@ async def create_upload_file(
     event: str = Query(...,
                        description="Tipo de evento. Ejemplo: 'up' o 'join'"),
     file_service: FileService = Depends(get_file_service),
-    api_key: str = Depends(get_api_key)
 ):
     body = await request.body()
 
