@@ -37,7 +37,7 @@ class SensorHistory(SQLModel, table=True):
     bat: Optional[float] = Field(default=None)
     tempc_ds18b20: Optional[float] = Field(default=None)
     interrupt_flag: Optional[int] = Field(default=None)
-    phi_soil: Optional[float] = Field(default=None)
+    ph1_soil: Optional[float] = Field(default=None)
 
     gateway_id: Optional[str] = Field(default=None, max_length=50)
     uplink_id: Optional[int] = Field(default=None)
@@ -107,7 +107,7 @@ class SensorHistory(SQLModel, table=True):
             obj_data.get("TempC_DS18B20"))
         instance.temp_soil = cls._parse_float(obj_data.get("TEMP_SOIL"))
         instance.interrupt_flag = obj_data.get("Interrupt_flag")
-        instance.phi_soil = cls._parse_float(obj_data.get("PHI_SOIL"))
+        instance.ph1_soil = cls._parse_float(obj_data.get("PH1_SOIL"))
 
         # Reception info
         rx_info = json_data.get("rxInfo", [])
