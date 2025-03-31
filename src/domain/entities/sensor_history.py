@@ -107,7 +107,7 @@ class SensorHistory(SQLModel, table=True):
             obj_data.get("TempC_DS18B20"))
         instance.temp_soil = cls._parse_float(obj_data.get("TEMP_SOIL"))
         instance.interrupt_flag = obj_data.get("Interrupt_flag")
-        instance.phi_soil = cls._parse_float(obj_data.get("PH_SOIL"))
+        instance.phi_soil = cls._parse_float(obj_data.get("PHI_SOIL"))
 
         # Reception info
         rx_info = json_data.get("rxInfo", [])
