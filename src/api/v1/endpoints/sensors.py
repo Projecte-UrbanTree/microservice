@@ -42,11 +42,12 @@ async def create_upload_file(
 @router.get("/sensors", response_model=list[SensorHistory])
 def get_sensors(
     skip: int = 0,
-    limit: int = 10,
+    limit: int = None,
     session: Session = Depends(get_session),
     api_key: str = Depends(get_api_key)
 ):
-    return session.exec(select(SensorHistory).offset(skip).limit(limit)).all()
+    query = select(SensorHistory)
+    return session.exec(query.offset(skip).limit(limit)).all()
 
 
 @router.get("/sensors/{sensor_id}", response_model=SensorHistory)
