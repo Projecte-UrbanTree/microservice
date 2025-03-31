@@ -1,0 +1,59 @@
+{
+    "deduplicationId": "e661e965-71b2-46ff-81fc-a05e34efa217",
+    "time": "2025-02-06T01:46:41.357919+00:00",
+    "deviceInfo": {
+        "tenantId": "c8a253ee-9b7d-4e45-b9b7-31c56fc17d91",
+        "tenantName": "Institut Montsia",
+        "applicationId": "82669a8b-57ae-4d7a-8257-8e6d9cff5e3a",
+        "applicationName": "APP test",
+        "deviceProfileId": "e6d7758c-d070-4a28-a053-6484c40ae73c",
+        "deviceProfileName": "LSPH01",
+        "deviceName": "SensorPH",
+        "devEui": "a84041265185f3fc",
+        "deviceClassEnabled": "CLASS_A",
+        "tags": {}
+    },
+    "devAddr": "00ad21ba",
+    "adr": true,
+    "dr": 5,
+    "fCnt": 1468,
+    "fPort": 2,
+    "confirmed": false,
+    "data": "DP8AAALqAFEAAAE=",
+    "object": {
+        "Message_type": 1.0,
+        "Bat": 3.327,
+        "TempC_DS18B20": "0.00",
+        "PHI_SOIL": "7.46",
+        "TEMP_SOIL": "8.10",
+        "Interrupt_flag": 0.0
+    },
+    "rxInfo": [
+        {
+            "gatewayId": "4a30504c5b344a53",
+            "uplinkId": 13057,
+            "gwTime": "2025-02-06T01:46:41.357919+00:00",
+            "rssi": -95,
+            "snr": 9.5,
+            "channel": 1,
+            "rfChain": 1,
+            "location": {
+                "latitude": 40.709340645877326,
+                "longitude": 0.5829620361328126
+            },
+            "context": "3p3cKw==",
+            "crcStatus": "CRC_OK"
+        }
+    ],
+    "txInfo": {
+        "frequency": 868300000,
+        "modulation": {
+            "lora": {
+                "bandwidth": 125000,
+                "spreadingFactor": 7,
+                "codeRate": "CR_4_5"
+            }
+        }
+    },
+    "regionConfigId": "eu868"
+}
