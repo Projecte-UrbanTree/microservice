@@ -105,7 +105,10 @@ class SensorHistory(SQLModel, table=True):
         instance.bat = obj_data.get("Bat")
         instance.tempc_ds18b20 = cls._parse_float(
             obj_data.get("TempC_DS18B20"))
-        instance.temp_soil = cls._parse_float(obj_data.get("TEMP_SOIL"))
+        instance.temp_soil = cls._parse_float(obj_data.get("temp_SOIL"))
+        instance.water_soil = cls._parse_float(obj_data.get("water_SOIL"))
+        instance.conductor_soil = cls._parse_float(
+            obj_data.get("conduct_SOIL"))
         instance.interrupt_flag = obj_data.get("Interrupt_flag")
         instance.ph1_soil = cls._parse_float(obj_data.get("PH1_SOIL"))
 
