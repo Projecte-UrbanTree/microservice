@@ -59,3 +59,17 @@ def get_sensor(
     if not sensor:
         raise HTTPException(status_code=404, detail="Sensor not found")
     return sensor
+
+
+@router.get("/sensors/deveui/{dev_eui}", response_model=SensorHistory)
+def get_sensor_by_dev_eui(
+    dev_eui: str,
+    session: Session = Depends(get_session),
+    api_key: str = Depends(get_api_key)
+):
+
+    sensor = session.exec(select(SensorHistory).where(
+        SensorHistory.dev_eui == dev_eui)).first()
+    if not sensor:
+        raise HTTPException(status_code=404, detail="Sensor not found")
+    return sensor
