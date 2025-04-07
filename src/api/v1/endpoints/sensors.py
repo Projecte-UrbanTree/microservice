@@ -5,6 +5,8 @@ from sqlmodel import Session, select
 from src.domain.entities.sensor_history import SensorHistory
 from src.core.db.connection import get_session
 from src.core.security.api_key import get_api_key
+from typing import Optional, List
+from datetime import datetime
 
 router = APIRouter()
 
@@ -73,3 +75,38 @@ def get_sensor_by_dev_eui(
     if not sensor:
         raise HTTPException(status_code=404, detail="Sensor not found")
     return sensor
+
+
+@router.get("/sensors/deveui/{dev_eui}/history", response_model=List[SensorHistory])
+def get_sensor_history(
+    dev_eui: str,
+    skip: int = 0,
+    limit: int = 100,
+    start_date: Optional[datetime] = None,
+    end_date: Optional[datetime] = None,
+    sort_order: str = Query("desc", regex="^(asc|desc)$"),
+    session: Session = Depends(get_session),
+    api_key: str = Depends(get_api_key)
+):
+
+    query = select(SensorHistory).where(SensorHistory.dev_eui == dev_eui)
+
+    if start_date:
+        query = query.where(SensorHistory.time >= start_date)
+    if end_date:
+        query = query.where(SensorHistory.time <= end_date)
+
+    if sort_order.lower() == "asc":
+        query = query.order_by(SensorHistory.time.asc())
+    else:
+        query = query.order_by(SensorHistory.time.desc())
+
+    results = session.exec(query.offset(skip).limit(limit)).all()
+
+    if not results:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No sensor history found for device with dev_eui {dev_eui}"
+        )
+
+    return results
