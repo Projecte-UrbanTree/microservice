@@ -7,6 +7,7 @@ from src.core.db.connection import get_session
 from src.core.security.api_key import get_api_key
 from typing import Optional, List
 from datetime import datetime
+from sqlalchemy import func
 
 router = APIRouter()
 
@@ -48,7 +49,23 @@ def get_sensors(
     session: Session = Depends(get_session),
     api_key: str = Depends(get_api_key)
 ):
-    return session.exec(select(SensorHistory).offset(skip).limit(limit)).all()
+    subq = (
+        select(
+            SensorHistory.dev_eui,
+            func.max(SensorHistory.time).label("max_time")
+        ).group_by(SensorHistory.dev_eui).subquery()
+    )
+    query = (
+        select(SensorHistory)
+        .join(
+            subq,
+            (SensorHistory.dev_eui == subq.c.dev_eui) & (
+                SensorHistory.time == subq.c.max_time)
+        )
+        .offset(skip)
+        .limit(limit)
+    )
+    return session.exec(query).all()
 
 
 @router.get("/sensors/{sensor_id}", response_model=SensorHistory)
@@ -69,9 +86,11 @@ def get_sensor_by_dev_eui(
     session: Session = Depends(get_session),
     api_key: str = Depends(get_api_key)
 ):
-
-    sensor = session.exec(select(SensorHistory).where(
-        SensorHistory.dev_eui == dev_eui)).first()
+    sensor = session.exec(
+        select(SensorHistory)
+        .where(SensorHistory.dev_eui == dev_eui)
+        .order_by(SensorHistory.time.desc())
+    ).first()
     if not sensor:
         raise HTTPException(status_code=404, detail="Sensor not found")
     return sensor
