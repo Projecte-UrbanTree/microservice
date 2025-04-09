@@ -108,7 +108,10 @@ def get_sensor_history(
     api_key: str = Depends(get_api_key)
 ):
 
-    query = select(SensorHistory).where(SensorHistory.dev_eui == dev_eui)
+    query = select(SensorHistory).where(
+        SensorHistory.dev_eui == dev_eui,
+        (SensorHistory.check == None) | (SensorHistory.check == False)  
+    )
 
     if start_date:
         query = query.where(SensorHistory.time >= start_date)
