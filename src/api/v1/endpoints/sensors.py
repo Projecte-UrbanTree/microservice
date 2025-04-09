@@ -129,3 +129,19 @@ def get_sensor_history(
         )
 
     return results
+
+@router.post("/updateSensorHistory")
+def update_sensor_history(
+    ids: List[int],
+    session: Session = Depends(get_session),
+    api_key: str = Depends(get_api_key)
+):
+    records = session.exec(
+        select(SensorHistory).where(SensorHistory.id.in_(ids))
+    ).all()
+    if not records:
+        raise HTTPException(status_code=404, detail="No records found with provided IDs")
+    for record in records:
+        record.check = True
+    session.commit()
+    
