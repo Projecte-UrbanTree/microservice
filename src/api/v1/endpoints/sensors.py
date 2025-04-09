@@ -110,7 +110,7 @@ def get_sensor_history(
 
     query = select(SensorHistory).where(
         SensorHistory.dev_eui == dev_eui,
-        (SensorHistory.check == None) | (SensorHistory.check == False)  
+        (SensorHistory.check == None) | (SensorHistory.check == False)
     )
 
     if start_date:
@@ -133,6 +133,7 @@ def get_sensor_history(
 
     return results
 
+
 @router.post("/updateSensorHistory")
 def update_sensor_history(
     ids: List[int],
@@ -143,8 +144,10 @@ def update_sensor_history(
         select(SensorHistory).where(SensorHistory.id.in_(ids))
     ).all()
     if not records:
-        raise HTTPException(status_code=404, detail="No records found with provided IDs")
+        raise HTTPException(
+            status_code=404, detail="No records found with provided IDs")
     for record in records:
         record.check = True
     session.commit()
-    
+
+    return {"updated": len(records), "ids": [record.id for record in records]}
