@@ -68,6 +68,8 @@ class SensorHistory(SQLModel, table=True):
             onupdate=text("CURRENT_TIMESTAMP")
         )
     )
+    check: Optional[bool] = Field(default=False, sa_column=Column("check", nullable=True, default=False))
+
 
     @classmethod
     def from_json(cls, json_data: dict) -> "SensorHistory":
