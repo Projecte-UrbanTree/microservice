@@ -83,6 +83,7 @@ def upgrade() -> None:
                         'CURRENT_TIMESTAMP'), nullable=True),
                     sa.Column('updated_at', sa.DateTime(), server_default=sa.text(
                         'CURRENT_TIMESTAMP'), nullable=True),
+                    sa.Column('check', sa.Boolean(), nullable=True, server_default=sa.text('false')),
                     sa.PrimaryKeyConstraint('id'),
                     sa.UniqueConstraint('deduplication_id')
                     )
