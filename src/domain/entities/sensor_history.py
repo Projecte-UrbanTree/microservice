@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional, Dict, Any
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Boolean
 from sqlalchemy import Column, DateTime, Text, JSON, text
 
 
@@ -55,6 +55,9 @@ class SensorHistory(SQLModel, table=True):
     modulation: Optional[Dict[Any, Any]] = Field(
         default=None, sa_column=Column(JSON))
     region_config_id: Optional[str] = Field(default=None, max_length=20)
+
+    check: Optional[bool] = Field(default=False, sa_column=Column(
+        Boolean, server_default=text("false")))
 
     created_at: Optional[datetime] = Field(
         default_factory=datetime.utcnow,
