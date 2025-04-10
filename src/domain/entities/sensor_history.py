@@ -56,9 +56,6 @@ class SensorHistory(SQLModel, table=True):
         default=None, sa_column=Column(JSON))
     region_config_id: Optional[str] = Field(default=None, max_length=20)
 
-    check: Optional[bool] = Field(default=False, sa_column=Column(
-        Boolean, server_default=text("false")))
-
     created_at: Optional[datetime] = Field(
         default_factory=datetime.utcnow,
         sa_column=Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))

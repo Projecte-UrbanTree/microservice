@@ -103,20 +103,22 @@ def get_sensor_history(
     limit: int = 100,
     start_date: Optional[datetime] = None,
     end_date: Optional[datetime] = None,
+    last_fetch_date: Optional[datetime] = None,
     sort_order: str = Query("desc", regex="^(asc|desc)$"),
     session: Session = Depends(get_session),
     api_key: str = Depends(get_api_key)
 ):
 
     query = select(SensorHistory).where(
-        SensorHistory.dev_eui == dev_eui,
-        (SensorHistory.check == None) | (SensorHistory.check == False)
+        SensorHistory.dev_eui == dev_eui
     )
 
     if start_date:
         query = query.where(SensorHistory.time >= start_date)
     if end_date:
         query = query.where(SensorHistory.time <= end_date)
+    if last_fetch_date:
+        query = query.where(SensorHistory.time > last_fetch_date)
 
     if sort_order.lower() == "asc":
         query = query.order_by(SensorHistory.time.asc())
@@ -132,22 +134,3 @@ def get_sensor_history(
         )
 
     return results
-
-
-@router.post("/updateSensorHistory")
-def update_sensor_history(
-    ids: List[int],
-    session: Session = Depends(get_session),
-    api_key: str = Depends(get_api_key)
-):
-    records = session.exec(
-        select(SensorHistory).where(SensorHistory.id.in_(ids))
-    ).all()
-    if not records:
-        raise HTTPException(
-            status_code=404, detail="No records found with provided IDs")
-    for record in records:
-        record.check = True
-    session.commit()
-
-    return {"updated": len(records), "ids": [record.id for record in records]}
