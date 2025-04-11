@@ -3,8 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.api.v1.endpoints import sensors
 from injector import Injector
 from src.core.di import AppModule
-import os
 from dotenv import load_dotenv
+from prometheus_fastapi_instrumentator import Instrumentator
 
 load_dotenv()
 
@@ -18,6 +18,9 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    # Initialize Prometheus instrumentation
+    Instrumentator().instrument(app).expose(app)
 
     injector = Injector([AppModule()])
     app.state.injector = injector

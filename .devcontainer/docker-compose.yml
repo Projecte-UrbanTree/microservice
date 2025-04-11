@@ -16,14 +16,7 @@ services:
     ports:
       - "3306:3306"
     healthcheck:
-      test:
-        [
-          "CMD",
-          "/usr/local/bin/healthcheck.sh",
-          "--su-mysql",
-          "--connect",
-          "--innodb_initialized",
-        ]
+      test: [ "CMD", "/usr/local/bin/healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -40,6 +33,28 @@ services:
       - "8080:80"
     depends_on:
       - database
+    networks:
+      - urbantree_network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    depends_on:
+      - devcontainer
+    networks:
+      - urbantree_network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
     networks:
       - urbantree_network
 

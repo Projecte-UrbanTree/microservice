@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "microservice"
+    static_configs:
+      - targets: ["devcontainer:8000"]
