@@ -8,6 +8,7 @@ from src.core.security.api_key import get_api_key
 from typing import Optional, List
 from datetime import datetime
 from sqlalchemy import func
+from src.service.metrics_updater import update_sensor_metrics
 
 router = APIRouter()
 
@@ -65,7 +66,9 @@ def get_sensors(
         .offset(skip)
         .limit(limit)
     )
-    return session.exec(query).all()
+    data = session.exec(query).all()
+    update_sensor_metrics([sensor.model_dump() for sensor in data])
+    return data
 
 
 @router.get("/sensors/{sensor_id}", response_model=SensorHistory)
