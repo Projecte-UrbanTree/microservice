@@ -17,6 +17,9 @@
       "type": "debugpy",
       "request": "launch",
       "module": "pytest",
+      "env": {
+        "APP_ENV": "test"
+      },
       "args": [
         "tests",
         "--junitxml=/reports/junit.xml",
