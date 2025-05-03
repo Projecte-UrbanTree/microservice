@@ -9,7 +9,6 @@ from typing import Optional, List
 from datetime import datetime
 from sqlalchemy import func
 from src.service.metrics_updater import update_sensor_metrics
-
 router = APIRouter()
 
 
