@@ -1,4 +1,5 @@
-from src.core.metrics import soil_water_gauge, soil_temp_gauge, soil_ph_gauge
+from src.core.metrics import soil_ph_gauge, soil_temp_gauge, soil_water_gauge
+
 
 def update_sensor_metrics(sensor_data: list[dict]):
     for sensor in sensor_data:
@@ -8,7 +9,7 @@ def update_sensor_metrics(sensor_data: list[dict]):
         device_name = sensor.get("device_name", "unknown")
         dev_eui = sensor.get("dev_eui", "unknown")
         labels = {"device_name": device_name, "dev_eui": dev_eui}
-        """ actulitzem solament si hi ha dades reals """
+
         if soil_water is not None:
             soil_water_gauge.labels(**labels).set(soil_water)
         if soil_temp is not None:

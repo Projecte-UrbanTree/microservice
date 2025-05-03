@@ -1,7 +1,7 @@
-# src/core/db/connection.py
-from sqlmodel import Session, create_engine
-from src.core.config import settings
 from dotenv import load_dotenv
+from sqlmodel import Session, create_engine
+
+from src.core.config import settings
 
 load_dotenv()
 engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))

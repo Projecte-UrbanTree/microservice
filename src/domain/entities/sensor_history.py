@@ -1,7 +1,8 @@
 from datetime import datetime
-from typing import Optional, Dict, Any
-from sqlmodel import SQLModel, Field, Boolean
-from sqlalchemy import Column, DateTime, Text, JSON, text
+from typing import Any, Dict, Optional
+
+from sqlalchemy import JSON, Column, DateTime, Text, text
+from sqlmodel import Boolean, Field, SQLModel
 
 
 class SensorHistory(SQLModel, table=True):
