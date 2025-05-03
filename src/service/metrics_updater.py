@@ -1,3 +1,4 @@
+import os
 from sqlalchemy import select, func
 from sqlmodel import Session
 from src.domain.entities.sensor_history import SensorHistory
@@ -9,6 +10,7 @@ from src.core.metrics import (
     sensors_active,
     historical_records,
 )
+
 
 def update_sensor_metrics(
     sensor_data: list[dict],
@@ -22,8 +24,8 @@ def update_sensor_metrics(
 
     for sensor in sensor_data:
         device_name = sensor.get("device_name", "unknown")
-        dev_eui     = sensor.get("dev_eui",     "unknown")
-        labels      = {"device_name": device_name, "dev_eui": dev_eui}
+        dev_eui = sensor.get("dev_eui", "unknown")
+        labels = {"device_name": device_name, "dev_eui": dev_eui}
 
         if (w := sensor.get("water_soil")) is not None:
             soil_water_gauge.labels(**labels).set(w)
@@ -32,32 +34,22 @@ def update_sensor_metrics(
         if (p := sensor.get("ph1_soil")) is not None:
             soil_ph_gauge.labels(**labels).set(p)
 
+
 def update_all_metrics(session: Session):
-    """ Updates various sensor-related metrics by querying the database.
 
-    This function performs the following operations:
-      - Retrieves the total number of historical records from the database.
-      - Calculates the total number of distinct sensors.
-      - Determines the total number of active sensors (sensors with at least one record).
-      - Fetches the latest data entry for each sensor and converts it into a list of dictionaries.
+    if os.getenv("ENV") == "development":
+        sensors_total.set(0)
+        sensors_active.set(0)
+        historical_records.set(0)
+        return
 
-    The gathered metrics are then used to update the sensor metrics via the `update_sensor_metrics` function.
-
-    Args:
-        session (Session): The database session used to execute queries.
-
-    Notes:
-        - An "active sensor" is defined as a sensor with at least one record in the database.
-        - The latest data for each sensor is determined by the maximum timestamp (`time`) for that sensor.
-    """
-    
     total_history = session.exec(
         select(func.count()).select_from(SensorHistory)
-    ).one()
+    ).scalar_one()
 
     total_sensors = session.exec(
         select(func.count(func.distinct(SensorHistory.dev_eui)))
-    ).one()
+    ).scalar_one()
 
     active_sensors = total_sensors
 
@@ -71,11 +63,13 @@ def update_all_metrics(session: Session):
     )
     latest_q = (
         select(SensorHistory)
-        .join(subq,
-              (SensorHistory.dev_eui == subq.c.dev_eui)
-              & (SensorHistory.time == subq.c.max_time))
+        .join(
+            subq,
+            (SensorHistory.dev_eui == subq.c.dev_eui)
+            & (SensorHistory.time == subq.c.max_time)
+        )
     )
-    results = session.exec(latest_q).all()
+    results = session.exec(latest_q).scalars().all()
     latest_list = [r.model_dump() for r in results]
 
     update_sensor_metrics(
