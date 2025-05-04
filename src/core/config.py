@@ -34,13 +34,18 @@ class Settings(BaseSettings):
     def check_mariadb_password(cls, data: Any) -> Any:
         if data.get("APP_ENV") == "test":
             return data
-        if (data.get("MARIADB_SERVER") is None
+        if (
+            data.get("MARIADB_SERVER") is None
             or data.get("MARIADB_USER") is None
-                or data.get("MARIADB_DB") is None):
+            or data.get("MARIADB_DB") is None
+        ):
             raise ValueError(
-                "MARIADB_SERVER, MARIADB_USER, and MARIADB_DB must be set.")
-        if (data.get("MARIADB_PASSWORD_FILE") is None
-                and data.get("MARIADB_PASSWORD") is None):
+                "MARIADB_SERVER, MARIADB_USER, and MARIADB_DB must be set."
+            )
+        if (
+            data.get("MARIADB_PASSWORD_FILE") is None
+            and data.get("MARIADB_PASSWORD") is None
+        ):
             raise ValueError(
                 "At least one of MARIADB_PASSWORD_FILE or MARIADB_PASSWORD must be set."
             )

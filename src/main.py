@@ -37,6 +37,7 @@ app: FastAPI = create_app()
 async def health():
     return {"status": "healthy"}
 
+
 @app.get("/metrics", include_in_schema=False)
 def metrics(session: Session = Depends(get_session)):
     update_all_metrics(session)

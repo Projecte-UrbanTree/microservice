@@ -30,7 +30,7 @@ class FileService:
     def process_up(self, content: bytes, extension: str):
         file_location = self.save_file(content, extension)
         try:
-            json_data = json.loads(content.decode('utf-8'))
+            json_data = json.loads(content.decode("utf-8"))
             sensor_data = self._convert_to_sensor_history(json_data)
             self._save_to_database(sensor_data)
         except Exception as e:
@@ -39,7 +39,7 @@ class FileService:
     def process_join(self, content: bytes):
         file_location = self.save_file(content, ".json")
         try:
-            json_data = json.loads(content.decode('utf-8'))
+            json_data = json.loads(content.decode("utf-8"))
             sensor_data = self._convert_to_sensor_history(json_data)
             self._save_to_database(sensor_data)
         except Exception as e:

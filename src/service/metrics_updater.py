@@ -56,20 +56,14 @@ def update_all_metrics(session: Session):
     active_sensors = total_sensors
 
     subq = (
-        select(
-            SensorHistory.dev_eui,
-            func.max(SensorHistory.time).label("max_time")
-        )
+        select(SensorHistory.dev_eui, func.max(SensorHistory.time).label("max_time"))
         .group_by(SensorHistory.dev_eui)
         .subquery()
     )
-    latest_q = (
-        select(SensorHistory)
-        .join(
-            subq,
-            (SensorHistory.dev_eui == subq.c.dev_eui)
-            & (SensorHistory.time == subq.c.max_time)
-        )
+    latest_q = select(SensorHistory).join(
+        subq,
+        (SensorHistory.dev_eui == subq.c.dev_eui)
+        & (SensorHistory.time == subq.c.max_time),
     )
     results = session.exec(latest_q).scalars().all()
     latest_list = [r.model_dump() for r in results]
