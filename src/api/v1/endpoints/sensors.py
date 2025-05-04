@@ -68,9 +68,7 @@ def get_sensors(
         .offset(skip)
         .limit(limit)
     )
-    data = session.exec(query).all()
-    update_sensor_metrics([sensor.model_dump() for sensor in data])
-    return data
+    return session.exec(query).all()
 
 
 @router.get("/sensors/{sensor_id}", response_model=SensorHistory)
