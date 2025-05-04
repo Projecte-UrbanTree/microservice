@@ -1,19 +1,22 @@
 from prometheus_client import Gauge
 
-soil_water_gauge = Gauge(
-    "soil_water",
-    "Soil water content",
-    ["device_name", "dev_eui"],
+#Global metrics
+sensors_total = Gauge(
+    "microservice_test_sensors_total",
+    "Total number of sensors in the database",
 )
 
-soil_temp_gauge = Gauge(
-    "soil_temp",
-    "Soil temperature",
-    ["device_name", "dev_eui"],
+sensors_active = Gauge(
+    "microservice_test_sensors_active",
+    "Number of sensors with datos recientes (último dato)",
 )
 
-soil_ph_gauge = Gauge(
-    "soil_ph",
-    "Soil pH",
-    ["device_name", "dev_eui"],
+historical_records = Gauge(
+    "microservice_test_historical_records_total",
+    "Total number of historical records in the database",
 )
+
+# Sensor metrics
+soil_water_gauge = Gauge("microservice_test_soil_water", "Soil water content", ["device_name","dev_eui"])
+soil_temp_gauge  = Gauge("microservice_test_soil_temp" , "Soil temperature"  , ["device_name","dev_eui"])
+soil_ph_gauge    = Gauge("microservice_test_soil_ph"   , "Soil pH"          , ["device_name","dev_eui"])

@@ -1,13 +1,15 @@
-from fastapi import APIRouter, HTTPException, Query, Request, status, Depends
+from datetime import datetime
+from typing import List, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from injector import Injector, inject
-from src.service.file_service import MAX_FILE_SIZE, FileService
+from sqlalchemy import func
 from sqlmodel import Session, select
-from src.domain.entities.sensor_history import SensorHistory
+
 from src.core.db.connection import get_session
 from src.core.security.api_key import get_api_key
-from typing import Optional, List
-from datetime import datetime
-from sqlalchemy import func
+from src.domain.entities.sensor_history import SensorHistory
+from src.service.file_service import MAX_FILE_SIZE, FileService
 from src.service.metrics_updater import update_sensor_metrics
 
 router = APIRouter()
