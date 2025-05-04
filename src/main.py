@@ -1,13 +1,14 @@
-from fastapi import FastAPI, Depends, Response
+from fastapi import Depends, FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from injector import Injector
+from prometheus_client import CONTENT_TYPE_LATEST, REGISTRY, generate_latest
 from prometheus_fastapi_instrumentator import Instrumentator
-from prometheus_client import generate_latest, CONTENT_TYPE_LATEST, REGISTRY
 from sqlmodel import Session
-from src.core.db.connection import get_session
-from src.service.metrics_updater import update_all_metrics
+
 from src.api.v1.endpoints import sensors
+from src.core.db.connection import get_session
 from src.core.di import AppModule
+from src.service.metrics_updater import update_all_metrics
 
 
 def create_app() -> FastAPI:

@@ -1,15 +1,17 @@
 import os
-from sqlalchemy import select, func
+
+from sqlalchemy import func, select
 from sqlmodel import Session
-from src.domain.entities.sensor_history import SensorHistory
+
 from src.core.metrics import (
+    historical_records,
+    sensors_active,
+    sensors_total,
     soil_ph_gauge,
     soil_temp_gauge,
     soil_water_gauge,
-    sensors_total,
-    sensors_active,
-    historical_records,
 )
+from src.domain.entities.sensor_history import SensorHistory
 
 
 def update_sensor_metrics(
